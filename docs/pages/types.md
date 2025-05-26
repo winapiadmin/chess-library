@@ -46,3 +46,45 @@ enum class GameResultReason {
 ```cpp
 enum class CheckType { NO_CHECK, DIRECT_CHECK, DISCOVERY_CHECK };
 ```
+## Color
+
+```cpp
+
+class Color {
+   public:
+    enum class underlying : std::int8_t { WHITE = 0, BLACK = 1, NONE = -1 };
+
+    constexpr Color() : color(underlying::NONE);
+    constexpr Color(underlying c) : color(c);
+    constexpr Color(int c) : Color(static_cast<underlying>(c));
+    constexpr Color(std::string_view str);
+
+    /**
+     * @brief Gets the long string representation of the color
+     * @return "White" for WHITE, "Black" for BLACK
+     * "None" for NONE
+     */
+    [[nodiscard]] std::string longStr() const;
+
+    constexpr Color operator~() const noexcept;
+
+    constexpr bool operator==(const Color& rhs) const noexcept;
+    constexpr bool operator!=(const Color& rhs) const noexcept;
+
+    constexpr operator int() const noexcept { return static_cast<int>(color); }
+
+    explicit operator std::string() const;
+
+    [[nodiscard]] constexpr underlying internal() const noexcept;
+
+    friend std::ostream& operator<<(std::ostream& os, const Color& color);
+
+    static constexpr underlying WHITE = underlying::WHITE;
+    static constexpr underlying BLACK = underlying::BLACK;
+    static constexpr underlying NONE  = underlying::NONE;
+
+   private:
+    underlying color;
+
+    static constexpr bool isValid(int c);
+};
